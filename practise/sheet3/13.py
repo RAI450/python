@@ -19,5 +19,5 @@ p,r,t=map(int,input("enter principal ,rate and time").split())
 # print("amount =",p+ci)
 # print("compound intrest =",ci)
 
-a=p(1+(r/100))^t
+a=float(p(1+(r/100))^t)
 print(a)
