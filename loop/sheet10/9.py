@@ -8,20 +8,15 @@
 # Input: 2456
 # Output: Not All Even
 
-n=int(input("enter number "))
-out=True
-while out==True and n>0:
-    mod=n%10
-    n=n//10
-    if mod%2==0:
-        out=True
+n=int(input("enter the no"))
+a=True
+while n>0 and a==True:
+    if (n%10)==2:
+        a=True
     else:
-        out==False
-
-if out==True:
-    print("Output: All Even")
+        a=False
+    n=n//10
+if a==True:
+    print("all are even")
 else:
-    print("Output: Not All Even")
-    
-
-
+    print("not even")
