@@ -17,3 +17,23 @@
 # Output:
 # Automorphic Number
 
+n=int(input("enter the number"))
+sqr=n**2
+a=False
+l=len(str(n))
+
+for i in range(l):
+    if (n%10)==(sqr%10):
+        a=True
+        n=n//10
+        sqr=sqr//10
+    else:
+        a=False
+if a==True:
+    print("automorphic number")
+else:
+    print("not an automorphic number")
+    
+
+
+

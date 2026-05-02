@@ -17,16 +17,17 @@
 # Output:
 # Duck Number
 
-num=int(input("enter the number "))
+num=input("enter the number ")
+a=len(num)-1
+num=int(num)
 count=0
-                                              #0123======not printing rejected number
-for i in range(1,2):
-    if i==0:
-        print("rejected number")
+if num//(10**a)==0:
+    print("number rejected ")
+else:
+    for i in str(num):
+        if int(i)==0:
+            count+=1
+    if count>0:
+        print("duck number")
     else:
-        for i in str(num):
-            if int(i)==0:
-                count+=1
-        
-if count==1:
-    print("duck number")
+        print("not duck number")

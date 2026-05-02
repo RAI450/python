@@ -1,6 +1,7 @@
-# 8.
-# Mirror Difference Transaction Verification System
-# A multinational banking company processes thousands of daily transaction IDs. To detect suspicious patterns and validate system-generated IDs,
+# 8.Mirror Difference Transaction Verification System
+
+# A multinational banking company processes thousands of daily transaction IDs. 
+# To detect suspicious patterns and validate system-generated IDs,
 #  the security software performs a Mirror Difference Verification Test.
 # For every entered transaction ID:
 
@@ -36,3 +37,24 @@
 # 1234
 # Output:
 # Reverse = 4321Difference = 3087Digits = 4Verified
+
+n=int(input("enter the number" ))
+oid=n
+rev=""
+for i in str(n):
+    a=n%10
+    rev=rev+str(a)
+    n=n//10
+print("reverse = ",rev)
+rid=int(rev)
+dif=abs(oid-rid)
+print("difference = ",dif)
+l=len(str(dif))
+print("digits = ",l)
+if dif==0:
+    print("perfect match")
+elif dif%9==0:
+    print("verified")
+else:
+    print("rejected")
+
