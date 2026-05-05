@@ -48,7 +48,7 @@ print("differences: ",diff)
 print("Even Differences Count =",count)
 print("Max Difference =",max)
 if cnt==(l-1):
-    print("uniform defference")
+    print("uniform difference")
 else:
     print("non uniform pattern")
 
