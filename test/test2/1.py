@@ -24,3 +24,4 @@
 # Max Frequency Digit = 1
 # Repeated Pattern Detected
 
+n=int(input("enter the number "))
