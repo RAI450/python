@@ -7,8 +7,8 @@
 #     654
 #      65
 
-n=int(input("enter the number "))
 
+n=int(input("enter the number "))
 for i in range(1,n):
     x=i-1
     y=n
@@ -20,3 +20,38 @@ for i in range(1,n):
             print(y,end="")
             y-=1
     print()
+
+'''    
+n=int(input("enter the number "))
+
+for i in range(n-1):
+    for j in range(i):
+        print(" ", end='') 
+    for k in range(n,i,-1):
+        print(k,end='')
+    print()
+
+'''
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
