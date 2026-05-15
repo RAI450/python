@@ -1,15 +1,15 @@
-# *
-#  *
-#   *
-#    *
-#     *
+# 1
+# 00
+# 111
+# 0000
+# 11111
 
 n=int(input("enter the number "))
 
 for i in range(1,n+1):
     for j in range(1,i+1):
-        if i==j:
-            print("*",end="")
+        if i%2==0:
+            print("0",end="")
         else:
-            print(" ",end="")
+            print("1",end="")
     print()

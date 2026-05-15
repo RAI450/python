@@ -38,26 +38,26 @@ for i in range(1,n+1):
             else:
                 print(" ",end="")
         print()
-# x=7
-# for i in range(3,0):                             # JUST to print logic is too bad and only work for n=4
-#     x=x-i+1
-#     a=x
-#     if i%2!=0:    
-#         for j in range(1,2*n):
-#             if j%2==0:
-#                 print(a,end="")
-#                 a+=1
-#             else:
-#                 print(" ",end="")
-#         print()
-#     else:
-#         for j in range(1,2*n):
-#             if j%2!=0:
-#                 print(a,end="")
-#                 a+=1
-#             else:
-#                 print(" ",end="")
-#         print()
+x=7
+for i in range(3,0):                             # JUST to print logic is too bad and only work for n=4
+    x=x-i+1
+    a=x
+    if i%2!=0:    
+        for j in range(1,2*n):
+            if j%2==0:
+                print(a,end="")
+                a+=1
+            else:
+                print(" ",end="")
+        print()
+    else:
+        for j in range(1,2*n):
+            if j%2!=0:
+                print(a,end="")
+                a+=1
+            else:
+                print(" ",end="")
+        print()
 
 
 
