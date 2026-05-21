@@ -19,3 +19,17 @@
 
 
 # lufrewop si nohtyP
+
+n=input("enter the sentence: ")
+
+s=n.split()
+
+revs=""
+for i in s:
+    rev=""
+    for j in i:
+        rev=j+rev
+    revs=rev+revs+" "
+
+print(revs)
+    

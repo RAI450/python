@@ -20,3 +20,23 @@
 
 
 # is
+
+n=input("enter the sentence: ")
+
+s=n.split()
+ind=0
+word=0
+shrt=len(s[0])
+
+for i in s:
+    count=0
+    word+=1
+    for j in i:
+        count+=1
+        if count<shrt:
+            shrt=count
+            ind=word
+print(s[ind])
+            
+
+
