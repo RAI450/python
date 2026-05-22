@@ -19,3 +19,12 @@
 
 # 5
 
+n=input("enter the password: ")
+
+vis=""
+count=0
+for i in n:
+    if i not in vis:
+        vis=vis+i
+        count+=1
+print(count)

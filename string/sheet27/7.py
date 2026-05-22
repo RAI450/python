@@ -10,9 +10,15 @@
 
 # ``
 # hello hello how are are you
-
-
 # Output:
-
-
 # hello how are you
+
+n=input("enter the sentence: ")
+
+s=n.split()
+
+vis=""
+for i in s:
+    if i not in vis:
+        vis=vis+i+" "
+print(vis)
