@@ -21,11 +21,7 @@ print(res)
 
 
 
-# for i in n:
-#     for j in range(l):
-#         if n[j-1]!=i:
-#             res=res+i
-        
+
 
 
 

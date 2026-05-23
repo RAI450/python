@@ -67,3 +67,26 @@
 
 # Program Closed Successfully
 
+print("-"*20,"menu driven","-"*20)
+print("="*10,"smart processing system","="*10,'''
+
+1.  Reverse Complete String
+2.  Reverse Every Word
+3.  Reverse Word Order
+4.  Exit''')
+
+ch=int(input("enter your choice: "))
+
+match ch:
+    case 1:
+        s=input("enter the string: ")
+
+
+
+    case 2:
+        s=input("enter the string: ")
+        t=s.split()
+        for i in t:
+            if i is
+
+

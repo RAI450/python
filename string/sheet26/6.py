@@ -51,6 +51,3 @@ if dig==[]:
     print("No digits found")
 
                                     
-
-
-# xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
