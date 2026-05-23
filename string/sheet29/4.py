@@ -21,5 +21,17 @@
 # file file(1) image file(2) image(1) data
 
 
+n=input("enter the sentence: ")
 
-
+s=n.split()
+res=""
+a=1
+l=len(s)
+for i in s:
+    count=0
+    for j in range(a,l):
+        if i==s[j]:
+            count+=1
+            s[j]=s[j]+"("+str(count)+")"
+    a+=1
+print(" ".join(s))
