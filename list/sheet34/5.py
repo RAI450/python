@@ -145,7 +145,7 @@ for i in mat:
 ind=0
 maxi=1
 for i in range(len(res)):
-    print("Row ",i," Sum = ",res[i])
+    print("Row ",i+1," Sum = ",res[i])
     if res[i]>ind:
         maxi=i+1
 
