@@ -39,14 +39,16 @@ x=0
 y=0
 flag=1
 for i in range(n):
-    if flag==1:
+    if flag==1 and x<len(pos):
         res.append(pos[x])
         x+=1
         flag=0
-    else:
+    elif flag==0 and y<len[neg]:
         res.append(neg[y])
         y+=1
         flag=1
+    
+    
 
 print(res)
 
