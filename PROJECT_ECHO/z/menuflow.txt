@@ -1,0 +1,197 @@
+🎮 PROJECT ECHO - MAIN MENU DESIGN (Version 1.0)
+╔══════════════════════════════════════════════════════════════╗
+║                      PROJECT ECHO                           ║
+║         "Some experiments should never have been completed."║
+╚══════════════════════════════════════════════════════════════╝
+
+                 ===== MAIN MENU =====
+
+    1. New Game
+    2. Story
+    3. Instructions
+    4. Credits
+    5. Exit
+
+--------------------------------------------------------------
+Enter your choice:
+📌 Menu Flow
+Main Menu
+│
+├── 1. New Game
+│      │
+│      ├── Ask Player Name
+│      ├── Start Story Part 1
+│      └── Enter Reception Hall
+│
+├── 2. Story
+│      │
+│      ├── Display Story
+│      └── Back to Main Menu
+│
+├── 3. Instructions
+│      │
+│      ├── Display Instructions
+│      └── Back to Main Menu
+│
+├── 4. Credits
+│      │
+│      ├── Display Credits
+│      └── Back to Main Menu
+│
+└── 5. Exit
+       │
+       ├── Confirm Exit
+       └── Close Program
+1️⃣ New Game
+
+When the player selects 1:
+
+==============================================================
+                     NEW GAME
+==============================================================
+
+Please enter your name:
+
+> __________
+
+==============================================================
+
+After entering the name:
+
+Welcome, Sahil!
+
+Initializing Player Profile...
+
+Loading Mission...
+
+Press ENTER to continue...
+
+Then the game begins.
+
+2️⃣ Story
+
+Only show Part 1 of the story.
+
+==============================================================
+                         STORY
+==============================================================
+
+YEAR: 2048
+
+Deep beneath the mountains...
+
+The Helix Research Facility was built in complete secrecy.
+
+Its purpose...
+
+PROJECT ECHO.
+
+One day...
+
+Everything went silent.
+
+No scientist ever returned.
+
+Among them...
+
+Your father.
+
+Press ENTER to return...
+3️⃣ Instructions
+==============================================================
+                     HOW TO PLAY
+==============================================================
+
+• Explore every room carefully.
+
+• Inspect objects to find clues.
+
+• Collect useful items.
+
+• Solve puzzles to unlock new areas.
+
+• Gather Evidence Files to uncover the truth.
+
+• Wrong answers reduce your health.
+
+• If your health reaches zero...
+
+                 GAME OVER
+
+Press ENTER to return...
+4️⃣ Credits
+==============================================================
+                       CREDITS
+==============================================================
+
+PROJECT ECHO
+
+Developed By
+
+Sahil Rai
+
+Python Project
+
+Special Thanks
+
+My Python Trainer
+
+ChatGPT (Planning & Mentoring)
+
+Version 1.0
+
+Press ENTER to return...
+5️⃣ Exit
+
+Instead of closing immediately:
+
+==============================================================
+Are you sure you want to exit?
+
+1. Yes
+
+2. No
+
+==============================================================
+Choice:
+
+If:
+
+Yes
+
+Thank you for playing PROJECT ECHO.
+
+Goodbye!
+
+If:
+
+No
+
+Return to Main Menu.
+
+🚨 Invalid Choice
+
+Always handle invalid input gracefully.
+
+==============================================================
+Invalid choice!
+
+Please enter a number between 1 and 5.
+
+Press ENTER to continue...
+
+Then show the menu again.
+
+🔁 Complete Menu Loop
+            Main Menu
+                 │
+        ┌────────┴────────┐
+        │                 │
+    Valid Choice     Invalid Choice
+        │                 │
+        ▼                 ▼
+ Execute Option      Error Message
+        │                 │
+        └────────┬────────┘
+                 ▼
+            Main Menu
