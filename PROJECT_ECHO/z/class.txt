@@ -1,0 +1,170 @@
+🧠 CLASS DESIGN (FINAL)
+1. Game
+
+Responsibility
+
+Controls the entire game.
+Coordinates all other classes.
+
+Attributes
+
+player
+current_room
+rooms
+menu
+game_running
+
+Methods
+
+start_game()
+loading_screen()
+title_screen()
+new_game()
+play()
+end_game()
+
+
+2. Menu
+
+Responsibility
+
+Displays menus and gets user choices.
+
+Methods
+
+show_main_menu()
+show_story()
+show_instructions()
+show_credits()
+get_choice()
+
+------------------------------------------------------------------------
+3. Player
+
+Responsibility
+
+Stores and manages player information.
+
+Attributes
+
+name
+health
+score
+access_level
+backpack
+evidence_list
+
+Methods
+
+take_damage()
+heal()
+add_score()
+show_status()
+-----------------------------------------------------------------------------
+4. Backpack
+
+Responsibility
+
+Manages collected items.
+
+Attributes
+
+items
+
+Methods
+
+add_item()
+remove_item()
+has_item()
+show_items()
+----------------------------------------------------------------------------------------
+5. Item
+
+Responsibility
+
+Represents one collectible item.
+
+Attributes
+
+name
+description
+usable
+
+Methods
+
+show_item()
+use()
+-------------------------------------------------------------------------------------------
+6. Room
+
+Responsibility
+
+Represents one room.
+
+Attributes
+
+name
+description
+objects
+puzzle
+reward
+evidence
+next_room
+
+Methods
+
+enter()
+look_around()
+inspect_objects()
+solve_puzzle()
+move_forward()
+===================================================================================================
+7. Puzzle
+
+Responsibility
+
+Controls one puzzle.
+
+Attributes
+
+question
+answer
+hint
+solved
+
+Methods
+
+start()
+check_answer()
+show_hint()
+=======================================================================================================================
+8. Evidence
+
+Responsibility
+
+Represents one evidence file.
+
+Attributes
+
+title
+content
+number
+
+Methods
+
+display()
+======================================================================================================
+9. GameData
+
+Responsibility
+
+Stores all static game content.
+
+Contains
+
+Story text
+Room descriptions
+Puzzle questions
+Evidence text
+Item descriptions
+ASCII art
