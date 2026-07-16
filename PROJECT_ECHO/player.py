@@ -1,4 +1,7 @@
 from backpack import Backpack
+from utils import print_header, progress_bar
+
+TOTAL_ROOMS = 8
 
 
 class Player:
@@ -14,76 +17,49 @@ class Player:
     # =====================================================
 
     def show_player_info(self):
+        print_header("Player Profile")
 
-        print(f"""
----------------- PLAYER PROFILE ----------------
-
-            Name         : {self.name}
-            Health       : {self.health}
+        print(f"""            Name         : {self.name}
+            Health       : {self.health} / 100
             Score        : {self.score}
             Access Level : {self.access_level}
-------------------------------------------------
-
 """)
 
     # =====================================================
 
     def show_backpack(self):
-        
-
-        print("""
-    ---------------- BACKPACK ----------------
-    """)
-
-        if self.backpack.items:
-
-            for i, item in enumerate(self.backpack.items, 1):
-
-                print(f"{i}. {item}")
-
-        else:
-
-            print("Backpack is empty.")
-
-        print("""
-    
-    """)
+        self.backpack.inspect_items()
 
     # =====================================================
 
     def show_evidence(self):
-
-        print("""
-    ---------------- EVIDENCE FILES ----------------
-    """)
+        print_header("Evidence Files")
 
         if self.evidence_list:
-
             for i, evidence in enumerate(self.evidence_list, 1):
-
                 print(f"{i}. {evidence}")
-
         else:
-
             print("No evidence collected.")
 
-        print("""
-    
-    """)
+        print()
 
     # =====================================================
 
     def take_damage(self, damage):
+        """Reduce player health and report whether the player is
+        still alive. The caller uses the return value to trigger a
+        Game Over if health reaches 0."""
 
         self.health -= damage
 
         if self.health < 0:
             self.health = 0
 
+        return self.health > 0
+
     # =====================================================
 
     def heal(self, amount):
-
         self.health += amount
 
         if self.health > 100:
@@ -91,40 +67,38 @@ class Player:
 
     # =====================================================
 
-    def add_score(self, points):
+    def is_alive(self):
+        return self.health > 0
 
+    # =====================================================
+
+    def add_score(self, points):
         self.score += points
 
     # =====================================================
 
     def increase_access_level(self):
-
         self.access_level += 1
 
     # =====================================================
 
     def add_evidence(self, evidence):
-
         self.evidence_list.append(evidence)
 
     # =====================================================
 
     def add_item(self, item):
-
         self.backpack.add_item(item)
 
     def show_hud(self):
+        print_header("Player Status")
 
-        print(f"""
-    ========================================================
-                       Player Status
-    ========================================================
-            Player       : {self.name.title()}
-            Health       : {self.health}
+        print(f"""            Player       : {self.name.title()}
+            Health       : {self.health} / 100
             Score        : {self.score}
             Access Level : {self.access_level}
             Evidence     : {len(self.evidence_list)}
             Items        : {len(self.backpack.items)}
-    
-    --------------------------------------------------------
-    """)
+
+            Facility Progress : {progress_bar(self.access_level, TOTAL_ROOMS)}
+""")

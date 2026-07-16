@@ -1,9 +1,14 @@
-from utils import press_enter
+from utils import press_enter, print_header, print_divider, get_int_choice
+from item import Item
+
+PUZZLE_BONUS_SCORE = 20
+PERFECT_SOLVE_BONUS = 10  # extra score for solving with zero wrong attempts
 
 
 class Room:
 
-    def __init__(self, name, description, puzzle=None, reward=None, evidence=None, next_room=None, look_items=None,required_access=0):
+    def __init__(self, name, description, puzzle=None, reward=None, evidence=None,
+                 next_room=None, look_items=None, required_access=0):
         self.name = name
         self.description = description
         self.puzzle = puzzle
@@ -15,22 +20,15 @@ class Room:
         self.required_access = required_access
 
     def enter(self):
-        print(f"""
-============================================================
-                  {self.name.upper()}
-============================================================
-
-{self.description}
-""")
-
+        print_header(self.name)
+        print(self.description)
         press_enter()
 
-    def show_room_menu(self,player):
+    def show_room_menu(self, player):
 
         while True:
-
             print(f"""
--------------------- {self.name} --------------------
+{'-' * 20} {self.name} {'-' * 20}
 
                 1. Look Around
                 2. Solve Puzzle
@@ -42,11 +40,10 @@ class Room:
                 7. View Backpack
                 8. View Evidence Collection
                 9. Back to Game Menu
---------------------------------------------------------
-
 """)
+            print_divider()
 
-            choice = input("Enter your choice : ")
+            choice = input("Enter your choice : ").strip()
 
             match choice:
 
@@ -54,7 +51,10 @@ class Room:
                     self.look_around()
 
                 case "2":
-                    self.solve_puzzle(player)
+                    result = self.solve_puzzle(player)
+
+                    if result == "GAME_OVER":
+                        return "GAME_OVER"
 
                 case "3":
                     self.collect_reward(player)
@@ -65,43 +65,33 @@ class Room:
                 case "5":
 
                     if not self.puzzle_solved:
-
                         print("""
                 The security door is locked.
                 Solve the puzzle first.
                 """)
-
                         press_enter()
 
                     elif player.access_level < self.required_access + 1:
-
                         print("""
                 ACCESS DENIED
 
                 You need a higher access level.
                 Collect the room reward first.
                 """)
-
                         press_enter()
 
                     else:
-
                         return "NEXT"
-                    
 
                 case "6":
                     player.show_player_info()
-
                     press_enter()
 
                 case "7":
                     player.show_backpack()
 
-                    press_enter()
-                
                 case "8":
                     player.show_evidence()
-
                     press_enter()
 
                 case "9":
@@ -110,54 +100,31 @@ class Room:
                 case _:
                     print("Invalid Choice!")
 
-
     def look_around(self):
 
-        if self.look_items is None:
+        if not self.look_items:
             print("Nothing interesting here.")
             press_enter()
             return
 
         while True:
-
-            print(f"""
-    ------------ {self.name.upper()} -----------
-    """)
+            print_header(self.name)
 
             count = 1
-
-            for item in self.look_items:
-                print(f"{count}. {item}")
-
+            for item_name in self.look_items:
+                print(f"{count}. {item_name}")
                 count += 1
 
             print(f"{count}. Go Back")
 
-            choice = input("\nEnter choice : ")
+            choice = get_int_choice("\nEnter choice : ", 1, count)
 
-            if choice.isdigit():
+            if choice == count:
+                break
 
-                choice = int(choice)
-
-                if 1 <= choice <= len(self.look_items):
-
-                    key = list(self.look_items.keys())[choice - 1]
-
-                    print(self.look_items[key])
-
-                    press_enter()
-
-                elif choice == len(self.look_items) + 1:
-
-                    break
-
-                else:
-
-                    print("Invalid Choice.")
-
-            else:
-
-                print("Invalid Choice.")
+            key = list(self.look_items.keys())[choice - 1]
+            print(self.look_items[key])
+            press_enter()
 
     def solve_puzzle(self, player):
 
@@ -166,32 +133,39 @@ class Room:
     You have already solved this puzzle.
     """)
             press_enter()
-            return
+            return None
 
         if self.puzzle is None:
             print("No puzzle in this room.")
             press_enter()
-            return
+            return None
 
-        self.puzzle.start()
+        self.puzzle.start(player)
+
+        if self.puzzle.fatal:
+            return "GAME_OVER"
 
         if self.puzzle.solved:
 
             self.puzzle_solved = True
 
-            player.add_score(20)
+            score_gained = PUZZLE_BONUS_SCORE
 
-            print("""
-    ==========================================
+            if self.puzzle.wrong_attempts == 0:
+                score_gained += PERFECT_SOLVE_BONUS
 
-                Puzzle Solved!
+            player.add_score(score_gained)
 
-                  +20 Score
+            print_header("Puzzle Solved")
 
-    ==========================================
-    """)
+            if self.puzzle.wrong_attempts == 0:
+                print(f"      Flawless solve! +{score_gained} Score\n")
+            else:
+                print(f"      +{score_gained} Score\n")
 
-            press_enter()      
+            press_enter()
+
+        return None
 
     def collect_reward(self, player):
 
@@ -209,22 +183,25 @@ class Room:
             press_enter()
             return
 
-        player.add_item(self.reward)
+        reward_item = Item(
+            name=self.reward,
+            description=f"Recovered from the {self.name}. Grants access to the next restricted area.",
+            usable=True
+        )
+
+        player.add_item(reward_item)
         player.increase_access_level()
 
-        print(f"""
-    ==========================================
+        print_header("Reward Collected")
 
-            You collected:
+        print(f"""            You collected:
 
             {self.reward}
 
             Access Level Increased!
 
             Current Access Level : {player.access_level}
-
-    -------------------------------------------
-    """)
+""")
 
         self.reward = None
 

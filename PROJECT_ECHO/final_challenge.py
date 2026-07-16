@@ -1,90 +1,53 @@
 from puzzle import Puzzle
-from utils import press_enter
-from data import *
+from utils import press_enter, print_header
+from data import (
+    FINAL_PUZZLE1, FINAL_ANSWER1, FINAL_HINT1,
+    FINAL_PUZZLE2, FINAL_ANSWER2, FINAL_HINT2,
+    FINAL_PUZZLE3, FINAL_ANSWER3, FINAL_HINT3,
+)
+
 
 class FinalChallenge:
 
     def __init__(self):
+        self.puzzle1 = Puzzle(FINAL_PUZZLE1, FINAL_ANSWER1, FINAL_HINT1)
+        self.puzzle2 = Puzzle(FINAL_PUZZLE2, FINAL_ANSWER2, FINAL_HINT2)
+        self.puzzle3 = Puzzle(FINAL_PUZZLE3, FINAL_ANSWER3, FINAL_HINT3)
 
-        self.puzzle1 = Puzzle(
-            FINAL_PUZZLE1,
-            FINAL_ANSWER1,
-            FINAL_HINT1
-        )
+    def start(self, player):
+        """Run all three shutdown puzzles in sequence.
 
-        self.puzzle2 = Puzzle(
-            FINAL_PUZZLE2,
-            FINAL_ANSWER2,
-            FINAL_HINT2
-        )
+        Returns:
+            True        -- all three puzzles solved, shutdown authorized
+            False       -- player backed out of a puzzle without solving it
+            "GAME_OVER" -- player's health reached 0 during a puzzle
+        """
 
-        self.puzzle3 = Puzzle(
-            FINAL_PUZZLE3,
-            FINAL_ANSWER3,
-            FINAL_HINT3
-        )
+        print_header("Final Shutdown Sequence")
 
-    def start(self):
-
-        print("""
-==================================================
-            FINAL SHUTDOWN SEQUENCE
-==================================================
-
-PROJECT ECHO has locked the Command Center.
+        print("""PROJECT ECHO has locked the Command Center.
 Three security authentications are required.
 Complete all challenges to activate
 the Emergency Shutdown.
-
-==================================================
 """)
 
         press_enter()
 
-        # ---------------- Puzzle 1 ----------------
+        for level, puzzle in enumerate(
+            (self.puzzle1, self.puzzle2, self.puzzle3), start=1
+        ):
+            print_header(f"Level {level}")
 
-        print("""
-================ LEVEL 1 =================
-""")
+            puzzle.start(player)
 
-        self.puzzle1.start()
+            if puzzle.fatal:
+                return "GAME_OVER"
 
-        if not self.puzzle1.solved:
-            return False
+            if not puzzle.solved:
+                return False
 
-        print("""
-Authentication Level 1 Complete.
-""")
-
-        press_enter()
-
-        # ---------------- Puzzle 2 ----------------
-
-        print("""
-================ LEVEL 2 =================
-""")
-
-        self.puzzle2.start()
-
-        if not self.puzzle2.solved:
-            return False
-
-        print("""
-Authentication Level 2 Complete.
-""")
-
-        press_enter()
-
-        # ---------------- Puzzle 3 ----------------
-
-        print("""
-================ LEVEL 3 =================
-""")
-
-        self.puzzle3.start()
-
-        if not self.puzzle3.solved:
-            return False
+            print(f"\nAuthentication Level {level} Complete.\n")
+            press_enter()
 
         print("""
 Authentication Complete.

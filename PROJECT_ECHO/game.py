@@ -1,5 +1,5 @@
 from menu import Menu
-from utils import press_enter
+from utils import press_enter, print_header, progress_bar
 from player import Player
 from room import Room
 from puzzle import Puzzle
@@ -113,6 +113,18 @@ from data import (
 
 )
 
+# Current room's display name -> what the player is trying to achieve there.
+ROOM_OBJECTIVES = {
+    "Reception Hall": "Find the Reception Key Card.",
+    "Security Office": "Restore Security Access.",
+    "Medical Bay": "Restore Medical Department Access.",
+    "Storage Room": "Search the storage area and obtain the Storage Key Card.",
+    "Research Laboratory": "Search your father's laboratory and uncover the truth.",
+    "Server Room": "Disable the Facility AI and locate the Reactor Core.",
+    "Reactor Core": "Stabilize the reactor and reach the Command Center.",
+    "Command Center": "Activate the Emergency Shutdown and stop PROJECT ECHO.",
+}
+
 
 class Game:
 
@@ -156,7 +168,6 @@ class Game:
 
     # ======================================================
 
-
     def loading_screen(self):
 
         print("""
@@ -168,7 +179,7 @@ class Game:
         print("Loading Game...\n")
 
         for i in [0, 10, 20, 35, 50, 65, 80, 90, 100]:
-            print(f"Loading... {i}%")
+            print(f"Loading {progress_bar(i, 100)}")
             time.sleep(0.3)
 
         print("\nGame Loaded Successfully!")
@@ -214,13 +225,15 @@ class Game:
 
     def new_game(self):
 
-        print("""
-==========================================================
-                        NEW GAME
-==========================================================
-""")
+        print_header("New Game")
 
-        name = input("Enter your name : ")
+        name = ""
+
+        while not name:
+            name = input("Enter your name : ").strip()
+
+            if not name:
+                print("Name cannot be empty. Please try again.\n")
 
         self.player = Player(name)
 
@@ -250,27 +263,36 @@ class Game:
 
     # ======================================================
 
+    def _build_room(self, name, description, puzzle_data, reward,
+                     evidence_data, look_items, required_access):
+        """Assemble one Room together with its Puzzle and Evidence.
+
+        Every room used to repeat the same three or four lines to build
+        its Puzzle and Evidence objects before creating the Room. This
+        helper keeps that logic in one place instead of copy-pasted
+        eight times.
+        """
+
+        puzzle = Puzzle(*puzzle_data) if puzzle_data else None
+        evidence = Evidence(*evidence_data) if evidence_data else None
+
+        return Room(
+            name,
+            description,
+            puzzle,
+            reward,
+            evidence,
+            look_items=look_items,
+            required_access=required_access
+        )
+
     def create_rooms(self):
 
-        # ---------------- Reception ----------------
-
-        reception_puzzle = Puzzle(
-            RECEPTION_PUZZLE_QUESTION,
-            RECEPTION_PUZZLE_ANSWER,
-            RECEPTION_PUZZLE_HINT
-        )
-
-        reception_evidence = Evidence(
-            RECEPTION_EVIDENCE_TITLE,
-            RECEPTION_EVIDENCE_CONTENT
-        )
-
-        reception_room = Room(
-            RECEPTION_NAME,
-            RECEPTION_DESCRIPTION,
-            reception_puzzle,
+        reception_room = self._build_room(
+            RECEPTION_NAME, RECEPTION_DESCRIPTION,
+            (RECEPTION_PUZZLE_QUESTION, RECEPTION_PUZZLE_ANSWER, RECEPTION_PUZZLE_HINT),
             RECEPTION_REWARD,
-            reception_evidence,
+            (RECEPTION_EVIDENCE_TITLE, RECEPTION_EVIDENCE_CONTENT),
             look_items={
                 "Reception Desk": RECEPTION_DESK,
                 "Broken Computer": RECEPTION_COMPUTER,
@@ -280,25 +302,11 @@ class Game:
             required_access=0
         )
 
-        # ---------------- Security ----------------
-
-        security_puzzle = Puzzle(
-            SECURITY_PUZZLE_QUESTION,
-            SECURITY_PUZZLE_ANSWER,
-            SECURITY_PUZZLE_HINT
-        )
-
-        security_evidence = Evidence(
-            SECURITY_EVIDENCE_TITLE,
-            SECURITY_EVIDENCE_CONTENT
-        )
-
-        security_room = Room(
-            SECURITY_NAME,
-            SECURITY_DESCRIPTION,
-            security_puzzle,
+        security_room = self._build_room(
+            SECURITY_NAME, SECURITY_DESCRIPTION,
+            (SECURITY_PUZZLE_QUESTION, SECURITY_PUZZLE_ANSWER, SECURITY_PUZZLE_HINT),
             SECURITY_REWARD,
-            security_evidence,
+            (SECURITY_EVIDENCE_TITLE, SECURITY_EVIDENCE_CONTENT),
             look_items={
                 "CCTV Monitor": SECURITY_CCTV,
                 "Security Locker": SECURITY_LOCKER,
@@ -307,25 +315,12 @@ class Game:
             },
             required_access=1
         )
-        # ---------------- Medical Bay ----------------
 
-        medical_puzzle = Puzzle(
-            MEDICAL_PUZZLE_QUESTION,
-            MEDICAL_PUZZLE_ANSWER,
-            MEDICAL_PUZZLE_HINT
-        )
-
-        medical_evidence = Evidence(
-            MEDICAL_EVIDENCE_TITLE,
-            MEDICAL_EVIDENCE_CONTENT
-        )
-
-        medical_room = Room(
-            MEDICAL_NAME,
-            MEDICAL_DESCRIPTION,
-            medical_puzzle,
+        medical_room = self._build_room(
+            MEDICAL_NAME, MEDICAL_DESCRIPTION,
+            (MEDICAL_PUZZLE_QUESTION, MEDICAL_PUZZLE_ANSWER, MEDICAL_PUZZLE_HINT),
             MEDICAL_REWARD,
-            medical_evidence,
+            (MEDICAL_EVIDENCE_TITLE, MEDICAL_EVIDENCE_CONTENT),
             look_items={
                 "Hospital Bed": MEDICAL_BED,
                 "Medicine Cabinet": MEDICAL_CABINET,
@@ -335,25 +330,11 @@ class Game:
             required_access=2
         )
 
-        # ---------------- Storage Room ----------------
-
-        storage_puzzle = Puzzle(
-            STORAGE_PUZZLE_QUESTION,
-            STORAGE_PUZZLE_ANSWER,
-            STORAGE_PUZZLE_HINT
-        )
-
-        storage_evidence = Evidence(
-            STORAGE_EVIDENCE_TITLE,
-            STORAGE_EVIDENCE_CONTENT
-        )
-
-        storage_room = Room(
-            STORAGE_NAME,
-            STORAGE_DESCRIPTION,
-            storage_puzzle,
+        storage_room = self._build_room(
+            STORAGE_NAME, STORAGE_DESCRIPTION,
+            (STORAGE_PUZZLE_QUESTION, STORAGE_PUZZLE_ANSWER, STORAGE_PUZZLE_HINT),
             STORAGE_REWARD,
-            storage_evidence,
+            (STORAGE_EVIDENCE_TITLE, STORAGE_EVIDENCE_CONTENT),
             look_items={
                 "Supply Boxes": STORAGE_BOXES,
                 "Metal Shelves": STORAGE_SHELVES,
@@ -362,25 +343,12 @@ class Game:
             },
             required_access=3
         )
-        # ---------------- Research Laboratory ----------------
 
-        lab_puzzle = Puzzle(
-            LAB_PUZZLE_QUESTION,
-            LAB_PUZZLE_ANSWER,
-            LAB_PUZZLE_HINT
-        )
-
-        lab_evidence = Evidence(
-            LAB_EVIDENCE_TITLE,
-            LAB_EVIDENCE_CONTENT
-        )
-
-        lab_room = Room(
-            LAB_NAME,
-            LAB_DESCRIPTION,
-            lab_puzzle,
+        lab_room = self._build_room(
+            LAB_NAME, LAB_DESCRIPTION,
+            (LAB_PUZZLE_QUESTION, LAB_PUZZLE_ANSWER, LAB_PUZZLE_HINT),
             LAB_REWARD,
-            lab_evidence,
+            (LAB_EVIDENCE_TITLE, LAB_EVIDENCE_CONTENT),
             look_items={
                 "Father's Workstation": LAB_WORKSTATION,
                 "Experiment Chamber": LAB_EXPERIMENT,
@@ -390,25 +358,11 @@ class Game:
             required_access=4
         )
 
-        # ---------------- Server Room ----------------
-
-        server_puzzle = Puzzle(
-            SERVER_PUZZLE_QUESTION,
-            SERVER_PUZZLE_ANSWER,
-            SERVER_PUZZLE_HINT
-        )
-
-        server_evidence = Evidence(
-            SERVER_EVIDENCE_TITLE,
-            SERVER_EVIDENCE_CONTENT
-        )
-
-        server_room = Room(
-            SERVER_NAME,
-            SERVER_DESCRIPTION,
-            server_puzzle,
+        server_room = self._build_room(
+            SERVER_NAME, SERVER_DESCRIPTION,
+            (SERVER_PUZZLE_QUESTION, SERVER_PUZZLE_ANSWER, SERVER_PUZZLE_HINT),
             SERVER_REWARD,
-            server_evidence,
+            (SERVER_EVIDENCE_TITLE, SERVER_EVIDENCE_CONTENT),
             look_items={
                 "Central Mainframe": SERVER_MAINFRAME,
                 "Server Racks": SERVER_RACKS,
@@ -417,25 +371,12 @@ class Game:
             },
             required_access=5
         )
-        # ---------------- Reactor Core ----------------
 
-        reactor_puzzle = Puzzle(
-            REACTOR_PUZZLE_QUESTION,
-            REACTOR_PUZZLE_ANSWER,
-            REACTOR_PUZZLE_HINT
-        )
-
-        reactor_evidence = Evidence(
-            REACTOR_EVIDENCE_TITLE,
-            REACTOR_EVIDENCE_CONTENT
-        )
-
-        reactor_room = Room(
-            REACTOR_NAME,
-            REACTOR_DESCRIPTION,
-            reactor_puzzle,
+        reactor_room = self._build_room(
+            REACTOR_NAME, REACTOR_DESCRIPTION,
+            (REACTOR_PUZZLE_QUESTION, REACTOR_PUZZLE_ANSWER, REACTOR_PUZZLE_HINT),
             REACTOR_REWARD,
-            reactor_evidence,
+            (REACTOR_EVIDENCE_TITLE, REACTOR_EVIDENCE_CONTENT),
             look_items={
                 "Reactor Core": REACTOR_CORE,
                 "Control Panel": REACTOR_CONTROL_PANEL,
@@ -444,19 +385,12 @@ class Game:
             },
             required_access=6
         )
-        # ---------------- Command Center ----------------
 
-        command_evidence = Evidence(
-            COMMAND_EVIDENCE_TITLE,
-            COMMAND_EVIDENCE_CONTENT
-        )
-
-        command_room = Room(
-            COMMAND_NAME,
-            COMMAND_DESCRIPTION,
-            puzzle=None,
+        command_room = self._build_room(
+            COMMAND_NAME, COMMAND_DESCRIPTION,
+            puzzle_data=None,
             reward=None,
-            evidence=command_evidence,
+            evidence_data=(COMMAND_EVIDENCE_TITLE, COMMAND_EVIDENCE_CONTENT),
             look_items={
                 "AI Core": COMMAND_AI_CORE,
                 "Main Console": COMMAND_MAIN_CONSOLE,
@@ -464,7 +398,7 @@ class Game:
                 "Observation Window": COMMAND_WINDOW
             },
             required_access=7
-)
+        )
 
         # ---------------- Connect Rooms ----------------
 
@@ -478,16 +412,20 @@ class Game:
 
         # ---------------- Store Rooms ----------------
 
-        self.rooms.append(reception_room)
-        self.rooms.append(security_room)
-        self.rooms.append(medical_room)
-        self.rooms.append(storage_room)
-        self.rooms.append(lab_room)
-        self.rooms.append(server_room)
-        self.rooms.append(reactor_room)
-        self.rooms.append(command_room)
+        self.rooms = [
+            reception_room,
+            security_room,
+            medical_room,
+            storage_room,
+            lab_room,
+            server_room,
+            reactor_room,
+            command_room,
+        ]
 
         self.current_room = reception_room
+
+    # ======================================================
 
     def start_rooms(self):
 
@@ -495,11 +433,7 @@ class Game:
 
         while self.current_room is not None:
 
-            print(f"""
-    ================================================
-                      ROOM {room_number} / {len(self.rooms)}
-    ================================================
-    """)
+            print_header(f"Room {room_number} / {len(self.rooms)}")
 
             self.player.show_hud()
 
@@ -519,52 +453,82 @@ class Game:
 
                 challenge = FinalChallenge()
 
-                if challenge.start():
+                result = challenge.start(self.player)
 
-                    self.ending()
-
+                if result == "GAME_OVER":
+                    self.game_over()
                     return
 
-                else:
+                if result:
+                    self.ending()
+                    return
 
-                    print("""
+                print("""
     Emergency Shutdown Failed.
 
     Returning to Command Center...
     """)
 
-                    press_enter()
+                press_enter()
 
-                    continue
+                continue
 
             # ---------------- NORMAL ROOMS ----------------
 
             action = self.current_room.show_room_menu(self.player)
 
-            if action == "NEXT":
+            if action == "GAME_OVER":
+
+                self.game_over()
+
+                return
+
+            elif action == "NEXT":
 
                 self.current_room = self.current_room.next_room
 
                 room_number += 1
 
             elif action == "BACK":
-
                 break
+
+    # ======================================================
+
+    def game_over(self):
+
+        print_header("Game Over")
+
+        print(f"""
+{self.player.name}, your injuries were too severe to continue.
+
+PROJECT ECHO claims another victim...
+
+------------------------------------------------------------
+                  FINAL STATISTICS
+------------------------------------------------------------
+            Score           : {self.player.score}
+            Evidence Found  : {len(self.player.evidence_list)} / 8
+            Access Level    : {self.player.access_level}
+------------------------------------------------------------
+
+You can start a New Game from the Main Menu to try again.
+""")
+
+        press_enter()
+
+    # ======================================================
+
     def ending(self):
 
-        print("""
-    ========================================================
-                    EMERGENCY SHUTDOWN
-    ========================================================
-    """)
+        print_header("Emergency Shutdown")
 
         input("Press Enter to begin shutdown...")
 
         progress = [10, 30, 55, 70, 95, 100]
 
         for value in progress:
-
-            print(f"Shutdown Progress : {value}%")
+            print(f"Shutdown Progress : {progress_bar(value, 100)}")
+            time.sleep(0.2)
 
         print("""
     PROJECT ECHO:
@@ -578,11 +542,9 @@ class Game:
 
         press_enter()
 
-        print("""
-    ========================================================
-                REACTOR FAILURE DETECTED
-    ========================================================
+        print_header("Reactor Failure Detected")
 
+        print("""
     WARNING!
 
     SELF DESTRUCTION ACTIVATED!
@@ -591,8 +553,8 @@ class Game:
         press_enter()
 
         for i in range(10, 0, -1):
-
             print(i)
+            time.sleep(0.15)
 
         print("""
     You sprint toward the emergency exit...
@@ -617,11 +579,9 @@ class Game:
 
         press_enter()
 
-        print("""
-    ========================================================
-                    MISSION COMPLETE
-    ========================================================
+        print_header("Mission Complete")
 
+        print("""
     Congratulations!
 
     You completed PROJECT ECHO.
@@ -631,64 +591,50 @@ class Game:
 
         press_enter()
 
-        print("""
-    ========================================================
-                        CREDITS
-    ========================================================
+        self.show_final_stats()
 
+        print_header("Credits")
+
+        print("""
                          PROJECT ECHO
                     Developed By - SAHIL RAI
                          Version 1.0
 
                     Thank you for playing!
-
-    ========================================================
     """)
 
         press_enter()
 
         self.end_game()
 
+    # ======================================================
+
+    def show_final_stats(self):
+
+        print_header("Mission Summary")
+
+        print(f"""
+            Agent            : {self.player.name}
+            Final Score      : {self.player.score}
+            Evidence Found   : {len(self.player.evidence_list)} / 8
+            Items Collected  : {len(self.player.backpack.items)}
+            Health Remaining : {self.player.health} / 100
+""")
+
+        press_enter()
+
+    # ======================================================
+
     def show_objective(self):
 
-        objectives = {
+        objective = ROOM_OBJECTIVES.get(self.current_room.name, "Explore the room.")
 
-            "Reception Hall":
-            "Find the Reception Key Card.",
+        print_header("Current Objective")
 
-            "Security Office":
-            "Restore Security Access.",
+        print(f"        ► {objective}\n")
 
-            "Medical Bay":
-            "Restore Medical Department Access.",
+    # ======================================================
 
-            "Storage Room":
-            "Search the storage area and obtain the Storage Key Card.",
-
-            "Research Laboratory":
-            "Search your father's laboratory and uncover the truth.",
-
-            "Server Room":
-            "Disable the Facility AI and locate the Reactor Core.",
-
-            "Reactor Core":
-            "Stabilize the reactor and reach the Command Center.",
-
-            "Command Center":
-            "Activate the Emergency Shutdown and stop PROJECT ECHO.",
-
-        }
-        objective = objectives.get(self.current_room.name)
-        print(f"""
-============================================================
-                    CURRENT OBJECTIVE
-============================================================
-
-        ► {objective}
-
-============================================================
-        """)
-# ======================================================================================================
     def end_game(self):
 
         print("""

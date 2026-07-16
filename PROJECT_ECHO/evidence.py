@@ -1,3 +1,6 @@
+from utils import print_header
+
+
 class Evidence:
 
     def __init__(self, title, content):
@@ -5,12 +8,8 @@ class Evidence:
         self.content = content
 
     def display(self):
-        print(f"""
-================ EVIDENCE ================
+        print_header("Evidence File")
 
-Title : {self.title}
-
+        print(f"""Title : {self.title}
 {self.content}
-
-==========================================
 """)
